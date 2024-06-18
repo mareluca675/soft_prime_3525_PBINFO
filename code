@@ -1,0 +1,84 @@
+#include <fstream>
+#include <deque>
+#include <algorithm>
+
+int num, n;
+std::deque<int> A;
+
+bool isPrime(int num){
+    if (num < 2)
+        return false;
+    if (num == 2)
+        return true;
+    else if ((num & 1) == 0)
+        return false;
+    else if (num == 3)
+        return true;
+    else if (num % 3 == 0)
+        return false;
+    else{
+        for(int d = 5; d * d <= num; d += 6) {
+            if (num % d == 0 || num % (d + 2) == 0){
+                return false;
+                break;
+            }
+        }
+    }
+    
+    return true;
+}
+
+
+int main()
+{
+    std::ofstream fout("soft_prime.out");
+    std::ifstream fin("soft_prime.in");
+    
+    fin >> n;
+    
+    long long median = 0;
+    while(fin >> num){
+        median += num;
+    }median /= n;
+    
+    fin.close();
+    
+    std::ifstream fin1("soft_prime.in");
+    fin1 >> n;
+    
+    while(fin1 >> num){
+        if(num < median){
+            if(isPrime(num)){
+                A.push_back(num);
+            }
+        }
+    }
+
+    fin1.close();
+    std::sort(A.begin(), A.end());
+    for (int elem : A) {
+        fout << elem << " ";
+    }
+    A.clear();
+    
+    std::ifstream fin2("soft_prime.in");
+    
+    fin2 >> n;
+    while(fin2 >> num){
+        if(num >= median){
+            if(isPrime(num)){
+                A.push_back(num);
+            }
+        }
+    }
+
+    fin2.close();
+    std::sort(A.begin(), A.end());
+    for (int elem : A) {
+        fout << elem << " ";
+    }
+    
+    A.clear();
+    fout.close();
+    return 0;
+}
